@@ -48,6 +48,7 @@ func Start() {
 
 	basePath := config.Config.Web.BasePath
 
+	reqHandler.HandleFunc(basePath+"/up", makeHealthcheckHandler())
 	reqHandler.HandleFunc(basePath+"/", makeHandler(mainpageHandler, "GET"))
 
 	reqHandler.HandleFunc(basePath+"/failed/", makeHandler(joblistHandler, "GET"))
@@ -114,6 +115,16 @@ func announceHttpStart(serverType, address, basePath string) {
 		log.Println("Starting", serverType, "server on", address, "with basepath", basePath)
 	} else {
 		log.Println("Starting", serverType, "server on", address)
+	}
+}
+
+func makeHealthcheckHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "GET" {
+			w.WriteHeader(http.StatusMethodNotAllowed)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
 	}
 }
 
