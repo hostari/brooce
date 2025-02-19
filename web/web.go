@@ -125,6 +125,7 @@ func makeHealthcheckHandler() http.HandlerFunc {
 			return
 		}
 		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("OK"))
 	}
 }
 
